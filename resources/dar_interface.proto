@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package com.dirac.acs.datastore;
+
+option java_package = "com.dirac.acs.datastore";
+option java_multiple_files = true;
+option optimize_for = SPEED;
+
+import "parameter_messages.proto";
+import "google/protobuf/timestamp.proto";
+
+// Version as major.minor.patch-extra
+message Version {
+  int32 major_version = 1;
+  int32 minor_version = 2;
+  int32 patch_version = 3;
+}
+
+// A value type that can hold several different types of data
+message Value {
+  oneof value {
+    string string_value = 1;
+    float float_value = 2;
+    int32 int32_value = 3;
+    int64 int64_value = 4;
+    bool bool_value = 5;
+    bytes binary_value = 6;
+  }
+}
+
+message Archive {
+  Version interface_version = 1; // Version of the format of this file
+  string uuid = 2; // unique identifier of the DAR file.
+  map<string, Value> archive_meta_data = 3; // A map of key-vale pairs where any meta data can be stored
+  google.protobuf.Timestamp creation_time = 4;
+  string description = 5;
+  repeated SignalChain configurations = 6; // the signal chains ("configurations") that exists
+  string creator = 7; // The software that created the DAR file
+  Version creator_version = 8; // Version of the software that created the DAR file
+  string author = 9; // the person that created the DAR file
+  string project = 10; // the same project/manufacturer that are stored in the DAR file
+  string manufacturer = 11;
+}
+
+message SignalChain {
+  string name = 1; // Name of the signal chain
+  Version rt_core_version = 2; // Version of rt core that the sigal chain was created for
+  map<string, Value> signal_chain_meta_data = 3; // A map of key-vale pairs where any meta data can be stored
+  repeated com.dirac.acs.datastore.ParamInfo parameters = 4; // A list of "public" proxy-parameters.
+}

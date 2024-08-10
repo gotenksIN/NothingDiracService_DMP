@@ -1,0 +1,62 @@
+// DiracIO 2.0 Parameter API Protocol
+//
+// The Parameter Service is used to get and set runtime parameters in an
+// endpoint that is processing audio.
+//
+// This file is subject to terms and conditions defined in the file
+// 'LICENSE.txt', which is part of this source code package.
+//
+syntax = "proto3";
+
+package com.dirac.acs.datastore;
+
+option java_package = "com.dirac.acs.datastore";
+option java_multiple_files = true;
+option optimize_for = SPEED;
+
+message ParamVoid {}
+
+message Id {sint32 id = 1;}
+
+enum ParamType {
+  PARAM_TYPE_LINEAR = 0;
+  PARAM_TYPE_LOGARITHMIC = 1;
+  PARAM_TYPE_TOGGLE = 2;
+  PARAM_TYPE_ENUMERATION = 3;
+}
+
+message ParamEnumValue {
+  string name = 1;
+  double value = 2;
+}
+
+message Ids {repeated Id ids = 1;}
+
+message ParamInfo {
+  Id id = 1;
+  string name = 2;
+  string description = 3;
+  double min = 4;
+  double max = 5;
+  double default = 6;
+  double step_size = 7;
+  ParamType type = 8;
+  repeated ParamEnumValue enum_values = 9;
+  string unit = 10;       // F.i. "dB"
+  string formatting = 11; // F.i. "%.1lf"
+}
+
+message ParamValue {
+  Id id = 1;
+  double value = 2;
+  bool updated = 3;
+}
+
+message ParamValues {repeated ParamValue values = 1;}
+
+message ParamNotify {
+  // Should be value of 'dio-user-agent' metadata
+  // SetParameterValues & SetParameterValuesNormalized RPCs
+  string change_id = 1;
+  Ids ids = 2;
+}

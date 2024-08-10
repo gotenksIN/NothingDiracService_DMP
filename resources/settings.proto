@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package com.dirac.acs.datastore;
+
+option java_package = "com.dirac.acs.datastore";
+option java_multiple_files = true;
+option optimize_for = SPEED;
+
+import "parameter_messages.proto";
+import "google/protobuf/timestamp.proto";
+
+message Settings {
+  string uuid = 1;
+  google.protobuf.Timestamp creation_time = 2;
+  repeated Configuration configurations = 3;
+  bool isGEF = 4;
+  bool isDiracEnabled = 5;
+  repeated int32 outputType = 6;
+  repeated bool isEnabled = 7;
+}
+
+message Configuration{
+  string name = 1;
+  string outputType = 2;
+  string streamType = 3;
+  repeated ParamValue values = 4;
+  bool active = 5;
+  google.protobuf.Timestamp activeTime = 6;
+}
